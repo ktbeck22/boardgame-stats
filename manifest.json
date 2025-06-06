@@ -3,7 +3,7 @@
   "short_name": "Stats",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#111111",
-  "theme_color": "#111111",
+  "background_color": "#1b1a19",
+  "theme_color": "#0078d4",
   "icons": []
 }
