@@ -1,0 +1,22 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background-color: #111;
+  color: white;
+}
+#app {
+  padding: 1em;
+}
+.card {
+  background: #222;
+  margin: 1em 0;
+  padding: 1em;
+  border-radius: 8px;
+}
+button {
+  background: #444;
+  color: white;
+  border: none;
+  padding: 0.5em 1em;
+  margin-top: 1em;
+}

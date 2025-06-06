@@ -1,0 +1,9 @@
+{
+  "name": "Board Game Stats",
+  "short_name": "Stats",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#111111",
+  "theme_color": "#111111",
+  "icons": []
+}
