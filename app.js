@@ -220,20 +220,27 @@ function renderChart(metric) {
   const maxGames = sessions.length;
   const playersByName = Object.fromEntries(players.map(p => [p.name, []]));
   let maxVal = 0;
+
+  const totals = Object.fromEntries(players.map(p => [p.name, { sum: 0, count: 0, data: [] }]));
+
   sessions.forEach((s, i) => {
     s.scores.forEach(score => {
       const value = metric === 'placement' ? score.score : score[metric];
-      playersByName[score.name].push({ x: i, y: value });
-      if (value > maxVal) maxVal = value;
+      const t = totals[score.name];
+      t.sum += value;
+      t.count += 1;
+      const avg = t.sum / t.count;
+      if (avg > maxVal) maxVal = avg;
+      t.data.push({ x: i, y: avg });
     });
   });
 
-  Object.entries(playersByName).forEach(([name, data]) => {
+  Object.entries(totals).forEach(([name, t]) => {
     const p = players.find(p => p.name === name);
     ctx.beginPath();
     ctx.strokeStyle = p.color || 'white';
     ctx.lineWidth = 2;
-    data.forEach((pt, i) => {
+    t.data.forEach((pt, i) => {
       const x = padding + pt.x * ((canvas.width - 2 * padding) / (maxGames - 1 || 1));
       const y = canvas.height - padding - (pt.y / maxVal) * (canvas.height - 2 * padding);
       if (i === 0) ctx.moveTo(x, y);
@@ -241,8 +248,10 @@ function renderChart(metric) {
     });
     ctx.stroke();
   });
+
   ctx.strokeStyle = '#666';
   ctx.strokeRect(padding, padding, canvas.width - 2 * padding, canvas.height - 2 * padding);
+}
 }
 
 function showPlayerLog(name) {
