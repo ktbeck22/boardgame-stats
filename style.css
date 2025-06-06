@@ -25,3 +25,9 @@ th {
 tr:nth-child(even) {
   background-color: #252423;
 }
+canvas {
+  margin-top: 1em;
+  border: 1px solid #444;
+  width: 100%;
+  max-width: 800px;
+}
