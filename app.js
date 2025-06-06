@@ -54,17 +54,33 @@ function render() {
     }
   });
 
-  const playerList = document.createElement('div');
-  playerList.innerHTML = '<h2>Players</h2>' + sortedPlayers.map(p => `
-    <div class="card">
-      <strong>${p.name}</strong><br>
-      Wins: ${p.wins || 0}<br>
-      Games: ${p.games || 0}<br>
-      Avg Placement: ${(p.avgPlacement || 0).toFixed(2)}<br>
-      Best Win: ${p.biggestWin ? (p.biggestWin.percent.toFixed(2) + '%') : '—'}
-    </div>
-  `).join('');
-  app.appendChild(playerList);
+  const table = document.createElement('table');
+  table.style.width = '100%';
+  table.style.marginTop = '1em';
+  table.style.borderCollapse = 'collapse';
+  table.innerHTML = `
+    <thead>
+      <tr>
+        <th style="text-align:left;padding:8px;">Name</th>
+        <th style="text-align:right;padding:8px;">Wins</th>
+        <th style="text-align:right;padding:8px;">Games</th>
+        <th style="text-align:right;padding:8px;">Avg Placement</th>
+        <th style="text-align:right;padding:8px;">Best Win</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${sortedPlayers.map(p => `
+        <tr>
+          <td style="padding:8px;">${p.name}</td>
+          <td style="text-align:right;padding:8px;">${p.wins || 0}</td>
+          <td style="text-align:right;padding:8px;">${p.games || 0}</td>
+          <td style="text-align:right;padding:8px;">${(p.avgPlacement || 0).toFixed(2)}</td>
+          <td style="text-align:right;padding:8px;">${p.biggestWin ? (p.biggestWin.percent.toFixed(2) + '%') : '—'}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  `;
+  app.appendChild(table);
 
   const nameInput = document.createElement('input');
   nameInput.placeholder = 'Player name';
