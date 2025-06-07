@@ -186,8 +186,8 @@ function showGameForm() {
       p.placementSum = (p.placementSum || 0) + (place + 1);
       p.avgPlacement = p.placementSum / p.games;
       if (place === 0) p.wins = (p.wins || 0) + 1;
-      p.dominanceSum = (p.dominanceSum || 0) + (((s.score - minScore) / (maxScore - minScore || 1)) * 100);
-      p.avgDominance = p.dominanceSum / p.games;
+      p.dominanceSum = (p.dominanceSum || 0) + ((s.score - minScore) / (maxScore - minScore || 1));
+      p.avgDominance = (p.dominanceSum / p.games) * 100;
       const step = scores.length > 1 ? 100 / (scores.length - 1) : 0;
       p.gameScoreSum = (p.gameScoreSum || 0) + (100 - place * step);
       p.avgGameScore = p.gameScoreSum / p.games;
@@ -199,7 +199,7 @@ function showGameForm() {
       scores: scores.map((s, place) => ({
         name: s.name,
         score: s.score,
-        dominance: (s.score - minScore) / (maxScore - minScore || 1) * 100,
+        dominance: (s.score - minScore) / (maxScore - minScore || 1),
         gameScore: 100 - place * ((scores.length > 1) ? 100 / (scores.length - 1) : 0)
       }))
     };
@@ -257,7 +257,7 @@ function showPlayerLog(name) {
     const score = s.scores.find(sc => sc.name === name);
     if (!score) return null;
     const place = [...s.scores].sort((a, b) => b.score - a.score).findIndex(sc => sc.name === name) + 1;
-    return `<tr><td>${s.game}</td><td>${place}</td><td>${score.score}</td><td>${score.gameScore.toFixed(1)}</td><td>${(score.dominance).toFixed(1)}%</td></tr>`;
+    return `<tr><td>${s.game}</td><td>${place}</td><td>${score.score}</td><td>${score.gameScore.toFixed(1)}</td><td>${(score.dominance * 100).toFixed(1)}%</td></tr>`;
   }).filter(Boolean).join('');
   app.innerHTML += `<table><thead><tr><th>Game</th><th>Place</th><th>Score</th><th>Game Score</th><th>Dominance</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
@@ -271,7 +271,7 @@ function showGameLog(index) {
   backBtn.onclick = render;
   app.appendChild(backBtn);
 
-  const rows = session.scores.map((s, i) => `<tr><td>${s.name}</td><td>${i + 1}</td><td>${s.score}</td><td>${s.gameScore.toFixed(1)}</td><td>${(s.dominance).toFixed(1)}%</td></tr>`).join('');
+  const rows = session.scores.map((s, i) => `<tr><td>${s.name}</td><td>${i + 1}</td><td>${s.score}</td><td>${s.gameScore.toFixed(1)}</td><td>${(s.dominance * 100).toFixed(1)}%</td></tr>`).join('');
   app.innerHTML += `<table><thead><tr><th>Player</th><th>Place</th><th>Score</th><th>Game Score</th><th>Dominance</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
