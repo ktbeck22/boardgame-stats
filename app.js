@@ -187,7 +187,7 @@ function showGameForm() {
       p.avgPlacement = p.placementSum / p.games;
       if (place === 0) p.wins = (p.wins || 0) + 1;
       p.dominanceSum = (p.dominanceSum || 0) + ((s.score - minScore) / (maxScore - minScore || 1));
-      p.avgDominance = (p.dominanceSum / p.games) * 100;
+      p.avgDominance = (p.dominanceSum * 100 / p.games);
       const step = scores.length > 1 ? 100 / (scores.length - 1) : 0;
       p.gameScoreSum = (p.gameScoreSum || 0) + (100 - place * step);
       p.avgGameScore = p.gameScoreSum / p.games;
