@@ -8,7 +8,7 @@ function saveData() {
 
 function render() {
   const app = document.getElementById('app');
-  app.innerHTML = '<h1>🎲 Board Game Stats</h1>';
+  app.innerHTML = '<h1>Board Game Stats</h1>';
   const controls = document.createElement('div');
 
   const nameInput = document.createElement('input');
@@ -22,7 +22,7 @@ function render() {
   controls.appendChild(colorInput);
 
   const addBtn = document.createElement('button');
-  addBtn.textContent = '➕ Add Player';
+  addBtn.textContent = 'Add Player';
   addBtn.onclick = () => {
     if (nameInput.value) {
       players.push({ name: nameInput.value, color: colorInput.value });
@@ -33,17 +33,17 @@ function render() {
   controls.appendChild(addBtn);
 
   const recordBtn = document.createElement('button');
-  recordBtn.textContent = '📝 Record Game';
+  recordBtn.textContent = 'Record Game';
   recordBtn.onclick = showGameForm;
   controls.appendChild(recordBtn);
 
   const saveBtn = document.createElement('button');
-  saveBtn.textContent = '💾 Save Backup';
+  saveBtn.textContent = 'Save Backup';
   saveBtn.onclick = downloadState;
   controls.appendChild(saveBtn);
 
   const loadLabel = document.createElement('label');
-  loadLabel.textContent = '📂 Load Backup';
+  loadLabel.textContent = 'Load Backup';
   const loadInput = document.createElement('input');
   loadInput.type = 'file';
   loadInput.accept = '.json';
@@ -54,7 +54,7 @@ function render() {
   controls.appendChild(loadLabel);
 
   const resetBtn = document.createElement('button');
-  resetBtn.textContent = '♻️ Reset All';
+  resetBtn.textContent = 'Reset All';
   resetBtn.onclick = () => {
     if (confirm('Reset all data?')) {
       players = [];
@@ -72,8 +72,8 @@ function render() {
     { label: 'Wins', key: 'wins' },
     { label: 'Games', key: 'games' },
     { label: 'Avg Place', key: 'avgPlacement' },
-    { label: 'Dominance', key: 'avgDominance' },
-    { label: 'Game Score', key: 'avgGameScore' }
+    { label: 'Avg Dominance', key: 'avgDominance' },
+    { label: 'Avg Game Score', key: 'avgGameScore' }
   ];
 
   const table = document.createElement('table');
@@ -120,7 +120,7 @@ function render() {
   // Game list
   if (sessions.length) {
     const gameList = document.createElement('ul');
-    app.appendChild(document.createElement('h2')).textContent = '📅 Past Games';
+    app.appendChild(document.createElement('h2')).textContent = 'Past Games';
     sessions.forEach((s, i) => {
       const item = document.createElement('li');
       const btn = document.createElement('button');
@@ -135,11 +135,11 @@ function render() {
   // Chart
   const chartSection = document.createElement('div');
   chartSection.innerHTML = `
-    <h2>📈 Stats Over Time</h2>
+    <h2>Stats Over Time</h2>
     <select onchange="renderChart(this.value)">
       <option value="placement">Average Placement</option>
-      <option value="gameScore">Game Score</option>
-      <option value="dominance">Dominance</option>
+      <option value="gameScore">Average Game Score</option>
+      <option value="dominance">Average Dominance</option>
     </select>
     <canvas id="stats-chart" width="800" height="400"></canvas>`;
   app.appendChild(chartSection);
@@ -148,7 +148,7 @@ function render() {
 
 function showGameForm() {
   const app = document.getElementById('app');
-  app.innerHTML = '<h1>📝 Record Game</h1>';
+  app.innerHTML = '<h1>Record Game</h1>';
 
   const form = document.createElement('div');
   const gameInput = document.createElement('input');
@@ -171,7 +171,7 @@ function showGameForm() {
   });
 
   const submitBtn = document.createElement('button');
-  submitBtn.textContent = '✅ Submit';
+  submitBtn.textContent = 'Submit';
   submitBtn.onclick = () => {
     const scores = inputs.filter(i => !i.skip.checked).map(i => ({
       name: i.name,
@@ -186,7 +186,7 @@ function showGameForm() {
       p.placementSum = (p.placementSum || 0) + (place + 1);
       p.avgPlacement = p.placementSum / p.games;
       if (place === 0) p.wins = (p.wins || 0) + 1;
-      p.dominanceSum = (p.dominanceSum || 0) + ((s.score - minScore) / (maxScore - minScore || 1));
+      p.dominanceSum = (p.dominanceSum || 0) + (((s.score - minScore) / (maxScore - minScore || 1)) * 100);
       p.avgDominance = p.dominanceSum / p.games;
       const step = scores.length > 1 ? 100 / (scores.length - 1) : 0;
       p.gameScoreSum = (p.gameScoreSum || 0) + (100 - place * step);
@@ -199,7 +199,7 @@ function showGameForm() {
       scores: scores.map((s, place) => ({
         name: s.name,
         score: s.score,
-        dominance: (s.score - minScore) / (maxScore - minScore || 1),
+        dominance: (s.score - minScore) / (maxScore - minScore || 1) * 100,
         gameScore: 100 - place * ((scores.length > 1) ? 100 / (scores.length - 1) : 0)
       }))
     };
@@ -247,9 +247,9 @@ function renderChart(metric) {
 
 function showPlayerLog(name) {
   const app = document.getElementById('app');
-  app.innerHTML = `<h1>📋 Game Log: ${name}</h1>`;
+  app.innerHTML = `<h1>Game Log: ${name}</h1>`;
   const backBtn = document.createElement('button');
-  backBtn.textContent = '⬅️ Back';
+  backBtn.textContent = 'Back';
   backBtn.onclick = render;
   app.appendChild(backBtn);
 
@@ -257,7 +257,7 @@ function showPlayerLog(name) {
     const score = s.scores.find(sc => sc.name === name);
     if (!score) return null;
     const place = [...s.scores].sort((a, b) => b.score - a.score).findIndex(sc => sc.name === name) + 1;
-    return `<tr><td>${s.game}</td><td>${place}</td><td>${score.score}</td><td>${score.gameScore.toFixed(1)}</td><td>${(score.dominance * 100).toFixed(1)}%</td></tr>`;
+    return `<tr><td>${s.game}</td><td>${place}</td><td>${score.score}</td><td>${score.gameScore.toFixed(1)}</td><td>${(score.dominance).toFixed(1)}%</td></tr>`;
   }).filter(Boolean).join('');
   app.innerHTML += `<table><thead><tr><th>Game</th><th>Place</th><th>Score</th><th>Game Score</th><th>Dominance</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
@@ -265,13 +265,13 @@ function showPlayerLog(name) {
 function showGameLog(index) {
   const session = sessions[index];
   const app = document.getElementById('app');
-  app.innerHTML = `<h1>📊 Game: ${session.game}</h1>`;
+  app.innerHTML = `<h1Game: ${session.game}</h1>`;
   const backBtn = document.createElement('button');
-  backBtn.textContent = '⬅️ Back';
+  backBtn.textContent = 'Back';
   backBtn.onclick = render;
   app.appendChild(backBtn);
 
-  const rows = session.scores.map((s, i) => `<tr><td>${s.name}</td><td>${i + 1}</td><td>${s.score}</td><td>${s.gameScore.toFixed(1)}</td><td>${(s.dominance * 100).toFixed(1)}%</td></tr>`).join('');
+  const rows = session.scores.map((s, i) => `<tr><td>${s.name}</td><td>${i + 1}</td><td>${s.score}</td><td>${s.gameScore.toFixed(1)}</td><td>${(s.dominance).toFixed(1)}%</td></tr>`).join('');
   app.innerHTML += `<table><thead><tr><th>Player</th><th>Place</th><th>Score</th><th>Game Score</th><th>Dominance</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
