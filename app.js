@@ -213,7 +213,8 @@ function showGameForm() {
 
 function renderChart(metric) {
   const canvas = document.getElementById('stats-chart');
-  if (!canvas) return;
+  if (!canvas || !sessions.length || !players.length) return;
+
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   const padding = 40;
@@ -237,6 +238,7 @@ function renderChart(metric) {
 
   Object.entries(totals).forEach(([name, t]) => {
     const p = players.find(p => p.name === name);
+    if (!p || !t.data.length) return;
     ctx.beginPath();
     ctx.strokeStyle = p.color || 'white';
     ctx.lineWidth = 2;
@@ -251,6 +253,7 @@ function renderChart(metric) {
 
   ctx.strokeStyle = '#666';
   ctx.strokeRect(padding, padding, canvas.width - 2 * padding, canvas.height - 2 * padding);
+}
 }
 }
 
